@@ -15,9 +15,3 @@ export const BASE_URL_ENV_VAR = "EMPIRIOLABS_API_BASE";
 
 export const API_KEYS_URL = "https://platform.empiriolabs.ai/dashboard/api-keys";
 export const MODELS_URL = "https://docs.empiriolabs.ai/models-pricing";
-
-/**
- * Inputs per embeddings request. text-embedding-v4 accepts at most 10, so the
- * default works for every embedding model; raise it for a model that takes more.
- */
-export const DEFAULT_EMBEDDINGS_BATCH_SIZE = 10;

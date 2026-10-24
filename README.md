@@ -5,7 +5,7 @@ LangChain.js integration for [EmpirioLabs AI](https://empiriolabs.ai): `ChatEmpi
 - Chat with any chat model in the [EmpirioLabs AI catalog](https://docs.empiriolabs.ai/models-pricing), with streaming, tool calling, structured output, and image input on the models that support them.
 - A reasoning model's thinking comes back in `additional_kwargs.reasoning_content` and as a `reasoning` block in `contentBlocks`.
 - Works with `createAgent` from `langchain` and with LangGraph.
-- Embeddings for retrieval, sent in batches the API accepts.
+- Embeddings for retrieval and vector stores.
 
 ## Install
 
@@ -104,7 +104,7 @@ const vector = await embeddings.embedQuery("What is EmpirioLabs AI?");
 const vectors = await embeddings.embedDocuments(["First document", "Second document"]);
 ```
 
-`embedDocuments` sends 10 inputs per request, the most `text-embedding-v4` accepts. Set `batchSize` for a model that takes more, and `dimensions` to choose the vector size on models that support it.
+A request takes up to 2,048 texts; `embedDocuments` sends 512 per request by default (`batchSize`). Set `dimensions` to choose the vector size on models that support it.
 
 ## Configuration
 

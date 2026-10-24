@@ -91,13 +91,13 @@ describe.skipIf(!process.env.EMPIRIOLABS_API_KEY)("EmpirioLabs AI API", () => {
     await expect(missing.invoke("Hi")).rejects.toThrow();
   });
 
-  it("embeds queries and more documents than one request takes", async () => {
+  it("embeds queries and more documents than one default batch", async () => {
     const embeddings = new EmpirioLabsEmbeddings({ model: EMBEDDING_MODEL });
     const query = await embeddings.embedQuery("What is EmpirioLabs AI?");
     expect(query.length).toBeGreaterThan(0);
 
-    const documents = await embeddings.embedDocuments(Array.from({ length: 23 }, (_, i) => `document number ${i}`));
-    expect(documents).toHaveLength(23);
+    const documents = await embeddings.embedDocuments(Array.from({ length: 600 }, (_, i) => `document number ${i}`));
+    expect(documents).toHaveLength(600);
     expect(new Set(documents.map((vector) => vector.length))).toEqual(new Set([query.length]));
 
     const small = new EmpirioLabsEmbeddings({ model: EMBEDDING_MODEL, dimensions: 256 });

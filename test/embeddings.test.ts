@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { DEFAULT_EMBEDDINGS_BATCH_SIZE, EmpirioLabsEmbeddings } from "../src/index.js";
+import { EmpirioLabsEmbeddings } from "../src/index.js";
 import { embeddingsResponse, fakeFetch, jsonResponse } from "./helpers.js";
 
 const KEY = "sk-empiriolabs-unit-test-key";
@@ -16,25 +16,20 @@ describe("EmpirioLabsEmbeddings", () => {
     expect(requests[0]?.body).toMatchObject({ model: "text-embedding-v4", input: "Hello" });
   });
 
-  it("sends at most 10 inputs per request by default, and keeps the order", async () => {
-    const { fetch, requests } = fakeFetch([
-      jsonResponse(embeddingsResponse(10)),
-      jsonResponse(embeddingsResponse(10)),
-      jsonResponse(embeddingsResponse(5)),
-    ]);
+  it("sends LangChain's default batches of 512, which the API takes, and keeps the order", async () => {
+    const { fetch, requests } = fakeFetch([jsonResponse(embeddingsResponse(512)), jsonResponse(embeddingsResponse(88))]);
     const embeddings = new EmpirioLabsEmbeddings({
       model: "text-embedding-v4",
       apiKey: KEY,
       maxConcurrency: 1,
       configuration: { fetch },
     });
-    const texts = Array.from({ length: 25 }, (_, i) => `document ${i}`);
+    const texts = Array.from({ length: 600 }, (_, i) => `document ${i}`);
     const vectors = await embeddings.embedDocuments(texts);
 
-    expect(DEFAULT_EMBEDDINGS_BATCH_SIZE).toBe(10);
-    expect(requests.map((r) => (r.body.input as string[]).length)).toEqual([10, 10, 5]);
+    expect(requests.map((r) => (r.body.input as string[]).length)).toEqual([512, 88]);
     expect(requests.flatMap((r) => r.body.input as string[])).toEqual(texts);
-    expect(vectors).toHaveLength(25);
+    expect(vectors).toHaveLength(600);
   });
 
   it("passes dimensions and a larger batch size through", async () => {
