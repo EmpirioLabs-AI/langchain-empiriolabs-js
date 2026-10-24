@@ -1,0 +1,76 @@
+{
+  "name": "@empiriolabs/langchain",
+  "version": "0.1.0",
+  "description": "LangChain.js integration for EmpirioLabs AI: ChatEmpirioLabs chat models and EmpirioLabsEmbeddings, with streaming, tool calling, structured output, image input, and reasoning content.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "homepage": "https://empiriolabs.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmpirioLabs-AI/langchain-empiriolabs-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EmpirioLabs-AI/langchain-empiriolabs-js/issues"
+  },
+  "author": {
+    "name": "EmpirioLabs AI",
+    "email": "support@empiriolabs.ai",
+    "url": "https://empiriolabs.ai"
+  },
+  "keywords": [
+    "langchain",
+    "langchainjs",
+    "langgraph",
+    "empiriolabs",
+    "chat-models",
+    "embeddings",
+    "llm",
+    "agents",
+    "ai"
+  ],
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:live": "vitest run --config vitest.live.config.ts",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@langchain/openai": "^1.7.0"
+  },
+  "peerDependencies": {
+    "@langchain/core": "^1.3.0"
+  },
+  "devDependencies": {
+    "@langchain/core": "1.3.0",
+    "@types/node": "22.20.5",
+    "langchain": "1.5.19",
+    "typescript": "7.0.2",
+    "vitest": "5.0.5",
+    "zod": "4.6.7"
+  }
+}
