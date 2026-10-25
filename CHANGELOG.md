@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Published from the Publish workflow through npm trusted publishing (OpenID Connect), with no stored npm token.
+
 ## 0.1.0
 
 - First release, for LangChain.js 1 (`@langchain/core` 1.3 or later) on Node.js 22 or later.

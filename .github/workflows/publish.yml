@@ -2,19 +2,17 @@
 # version tag such as 0.1.0 is pushed. The package is packed once from the
 # tagged commit, after the typecheck and the unit tests pass.
 #
-# npm authenticates through trusted publishing (OIDC, no secret). On
+# npm authenticates through trusted publishing only (OIDC, no secret). On
 # npmjs.com the package's trusted publisher is:
 #   Organization or user: EmpirioLabs-AI
 #   Repository:           langchain-empiriolabs-js
 #   Workflow filename:    publish.yml
 #   Environment:          npm
-# npm accepts a trusted publisher only on a package that exists, so the first
-# version alone authenticates with NPM_TOKEN, a short-lived granular token
-# held as a secret of the `npm` environment; the token is deleted and revoked
-# once that version is out and the trusted publisher is set. Trusted
-# publishing needs npm 11.5.1 or later, which Node 24 includes. The publish job
-# runs in the approval-gated `npm` environment and only publishes the tarball
-# the build job packed.
+# and its publishing access requires two-factor authentication and disallows
+# tokens. Version 0.1.0 alone went out with a short-lived granular token, which
+# was deleted afterwards. Trusted publishing needs npm 11.5.1 or later, which
+# Node 24 includes. The publish job runs in the approval-gated `npm`
+# environment and only publishes the tarball the build job packed.
 #
 # The tag must equal the version in package.json and PACKAGE_VERSION in
 # src/constants.ts. workflow_dispatch publishes the version in package.json at
@@ -135,13 +133,7 @@ jobs:
           name: package-tgz
 
       - name: Publish with provenance
-        # Trusted publishing (OIDC) unless the npm environment holds the
-        # first-release NPM_TOKEN described at the top of this file.
-        run: |
-          if [ -n "$NPM_TOKEN" ]; then
-            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
-          fi
-          npm publish "./$TARBALL" --access public --provenance
+        # npm authenticates through trusted publishing only (OIDC, no secret).
+        run: npm publish "./$TARBALL" --access public --provenance
         env:
           TARBALL: ${{ needs.build.outputs.tarball }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
